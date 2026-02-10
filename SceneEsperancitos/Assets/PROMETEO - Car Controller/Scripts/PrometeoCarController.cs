@@ -900,4 +900,17 @@ public class PrometeoCarController : MonoBehaviour, ISlowable, IHackable
         Debug.Log($"[HACK] isHacked ahora es: {isHacked}, accelerationMultiplier: {accelerationMultiplier}, maxSteeringAngle: {maxSteeringAngle}");
     }
 
+    public IEnumerator RecibirDisparo()
+    {
+        Debug.Log("💥 El jugador fue golpeado por un cohete");
+
+        // Ejemplo: aplicar hack por 2 segundos
+        ApplyHack(2f);
+
+        yield return new WaitForSeconds(2f);
+
+        RemoveHack();
+    }
+
+
 }

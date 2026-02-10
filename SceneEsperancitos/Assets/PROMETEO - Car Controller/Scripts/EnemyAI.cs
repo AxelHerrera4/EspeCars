@@ -7,6 +7,7 @@ public class EnemyAI : MonoBehaviour
     public Transform rutaPadre; // Arrastra aquÃ­ el objeto "Ruta_IA"
     private List<Transform> waypoints = new List<Transform>();
     private int currentWaypoint = 0;
+    private float memoriaVelocidadIA;
 
     [Header("ConfiguraciÃ³n IA")]
     public float distanciaCambio = 15f; // Distancia para ir al siguiente punto
@@ -25,6 +26,11 @@ public class EnemyAI : MonoBehaviour
 
     void Start()
     {
+        UnityEngine.AI.NavMeshAgent agente = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        if (agente != null)
+        {
+            memoriaVelocidadIA = agente.speed;
+        }
         carController = GetComponent<PrometeoCarController>();
         rb = GetComponent<Rigidbody>();
         power = GetComponent<PowerBase>();
@@ -146,6 +152,33 @@ public class EnemyAI : MonoBehaviour
 
             Gizmos.DrawSphere(actual, 0.5f);
             Gizmos.DrawLine(actual, siguiente);
+        }
+    }
+
+    // Variables nuevas (ponlas al principio de la clase con las demás variables)
+    private bool estaAturdido = false;
+    private float velocidadGuardada = 0f;
+
+    // ... (resto de tu código) ...
+
+    // Sustituye tu rutina RecibirDisparo por esta blindada:
+    public System.Collections.IEnumerator RecibirDisparo()
+    {
+        UnityEngine.AI.NavMeshAgent agente = GetComponent<UnityEngine.AI.NavMeshAgent>();
+
+        if (agente != null)
+        {
+            // 1. CASTIGO
+            agente.speed = 0;
+            agente.isStopped = true; // "Freno de mano" puesto
+            agente.velocity = Vector3.zero; // Parada física
+
+            // 2. ESPERA
+            yield return new WaitForSeconds(3f);
+
+            // 3. RESTAURACIÓN PERFECTA
+            agente.isStopped = false; // Quitamos freno de mano
+            agente.speed = memoriaVelocidadIA; // Vuelve a su velocidad original
         }
     }
 }

@@ -3,10 +3,11 @@ using UnityEngine;
 public class CarProgress : MonoBehaviour
 {
     public int currentCheckpoint = 0;
-    public int currentLap = 0;
+    public int currentLap = 1;
+    public int totalLaps = 2;
+    public bool finished = false;
 
     public float distanceToNextCheckpoint;
-
     public Transform[] checkpoints;
 
     void Update()
@@ -21,9 +22,14 @@ public class CarProgress : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Checkpoint cp = other.GetComponent<Checkpoint>();
+        if (finished) return;
 
-        if (cp != null && cp.checkpointIndex == currentCheckpoint)
+        
+
+        Checkpoint cp = other.GetComponent<Checkpoint>();
+        if (cp == null) return;
+
+        if (cp.checkpointIndex == currentCheckpoint)
         {
             currentCheckpoint++;
 
@@ -31,6 +37,14 @@ public class CarProgress : MonoBehaviour
             {
                 currentCheckpoint = 0;
                 currentLap++;
+
+                Debug.Log("Nueva vuelta: " + currentLap);
+
+                if (currentLap > totalLaps)
+                {
+                    finished = true;
+                    Debug.Log("Carrera terminada");
+                }
             }
         }
     }

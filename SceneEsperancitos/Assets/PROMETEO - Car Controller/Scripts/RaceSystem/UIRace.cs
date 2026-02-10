@@ -16,7 +16,7 @@ public class UIRace : MonoBehaviour
         int pos = raceManager.GetPosition(playerCar);
         positionText.text = pos + "°";
 
-        lapText.text = "Lap: " + (playerCar.currentLap + 1) + "/" + totalLaps;
+        lapText.text = "Vuelta: " + (playerCar.currentLap) + "/" + totalLaps;
 
         if (pos == 1)
         positionText.color = Color.yellow;

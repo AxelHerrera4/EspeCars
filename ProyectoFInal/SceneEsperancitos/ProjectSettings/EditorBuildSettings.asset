@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: c9494ad692ccaaa48ad9d3fbafa7902b
+  - enabled: 1
+    path: Assets/Scenes/Configuracion.unity
+    guid: 8fca9b8c241226740a03f8c46ffc9c03
+  - enabled: 1
+    path: Assets/Scenes/Pistas.unity
+    guid: ea4b5935f966f6f4eb591184d75001d6
+  - enabled: 1
+    path: Assets/Scenes/Pista3D.unity
+    guid: 9167e9775f5fd344f992d45103cb8198
+  - enabled: 1
+    path: Assets/Scenes/Software.unity
+    guid: acb3179d42d71ed4cb8b68cb34ca328f
+  - enabled: 1
+    path: Assets/Scenes/Iasa.unity
+    guid: 1e88d7fa12ab42441ac80613abf6d93e
+  - enabled: 1
+    path: Assets/Scenes/Civil.unity
+    guid: b0aa67a9361af0b40b1541da955fe802
+  - enabled: 1
+    path: Assets/Scenes/Mecatronica.unity
+    guid: 12e76665224e6a742ae294d4f3a2d431
+  - enabled: 1
+    path: Assets/Scenes/SampleScene.unity
+    guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/Creditos.unity
+    guid: 9d4d928220eab7b4ab7d6b3028072e08
+  m_configObjects:
+    com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  m_UseUCBPForAssetBundles: 0

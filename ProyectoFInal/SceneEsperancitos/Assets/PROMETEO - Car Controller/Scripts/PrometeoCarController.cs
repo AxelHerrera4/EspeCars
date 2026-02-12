@@ -29,6 +29,7 @@ public class PrometeoCarController : MonoBehaviour, ISlowable, IHackable
     // --- SLOW EFFECT ---
     private bool isSlowed = false;
     public bool IsSlowed => isSlowed;
+    public bool canMove = false;
 
     [Range(10, 120)]
     public int maxReverseSpeed = 45; //The maximum speed that the car can reach while going on reverse in km/h.
@@ -287,6 +288,22 @@ public class PrometeoCarController : MonoBehaviour, ISlowable, IHackable
     // Update is called once per frame
     void Update()
     {
+        if (!canMove)
+        {
+            frontLeftCollider.motorTorque = 0;
+            frontRightCollider.motorTorque = 0;
+            rearLeftCollider.motorTorque = 0;
+            rearRightCollider.motorTorque = 0;
+
+            frontLeftCollider.brakeTorque = brakeForce;
+            frontRightCollider.brakeTorque = brakeForce;
+            rearLeftCollider.brakeTorque = brakeForce;
+            rearRightCollider.brakeTorque = brakeForce;
+
+            return;
+        }
+
+
 
         //CAR DATA
 

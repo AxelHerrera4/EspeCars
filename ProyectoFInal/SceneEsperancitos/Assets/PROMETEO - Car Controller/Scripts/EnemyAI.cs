@@ -57,6 +57,9 @@ public class EnemyAI : MonoBehaviour
 
     void Update()
     {
+        if (!RaceStartManager.raceStarted)
+        return;
+
         if (waypoints.Count == 0) return;
 
         // Si el carro estÃ¡ hackeado o ralentizado, no hacer nada
@@ -155,11 +158,11 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    // Variables nuevas (ponlas al principio de la clase con las demás variables)
+    // Variables nuevas (ponlas al principio de la clase con las demï¿½s variables)
     private bool estaAturdido = false;
     private float velocidadGuardada = 0f;
 
-    // ... (resto de tu código) ...
+    // ... (resto de tu cï¿½digo) ...
 
     // Sustituye tu rutina RecibirDisparo por esta blindada:
     public System.Collections.IEnumerator RecibirDisparo()
@@ -171,12 +174,12 @@ public class EnemyAI : MonoBehaviour
             // 1. CASTIGO
             agente.speed = 0;
             agente.isStopped = true; // "Freno de mano" puesto
-            agente.velocity = Vector3.zero; // Parada física
+            agente.velocity = Vector3.zero; // Parada fï¿½sica
 
             // 2. ESPERA
             yield return new WaitForSeconds(3f);
 
-            // 3. RESTAURACIÓN PERFECTA
+            // 3. RESTAURACIï¿½N PERFECTA
             agente.isStopped = false; // Quitamos freno de mano
             agente.speed = memoriaVelocidadIA; // Vuelve a su velocidad original
         }

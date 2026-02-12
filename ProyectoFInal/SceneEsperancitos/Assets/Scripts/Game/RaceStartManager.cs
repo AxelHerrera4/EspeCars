@@ -10,7 +10,7 @@ public class RaceStartManager : MonoBehaviour
     public AudioClip countdownClip;
 
     [Header("GO UI")]
-    public TextMeshProUGUI goText;
+    public Text goText;
     public float goDuration = 1f;
 
     [Header("Semaforo UI")]

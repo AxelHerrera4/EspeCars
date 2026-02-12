@@ -1,10 +1,12 @@
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;   
 using System.Linq;
 
 public class RacePositionManager : MonoBehaviour
 {
-    public TextMeshProUGUI positionText;
+    public Text positionText;
+
+
 
     private CarProgress[] cars;
     private CarProgress playerCar;

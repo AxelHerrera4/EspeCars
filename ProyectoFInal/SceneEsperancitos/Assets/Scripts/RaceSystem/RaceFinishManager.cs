@@ -1,13 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using System.Collections.Generic;
 
 public class RaceFinishManager : MonoBehaviour
 {
     [Header("UI")]
     public GameObject resultsPanel;
-
-    [Header("Result Title")]
     public Text resultTitle;
 
     [Header("Gameplay UI To Hide")]
@@ -61,41 +60,27 @@ public class RaceFinishManager : MonoBehaviour
     {
         resultsShown = true;
 
-        // Bloquear todos los carros
+        // BLOQUEAR MOVIMIENTO
         foreach (var car in cars)
         {
             PrometeoCarController controller = car.GetComponent<PrometeoCarController>();
             if (controller != null)
                 controller.canMove = false;
-
-            // Simular tiempo a los que no terminaron
-            if (!car.finished)
-            {
-                car.finishTime = Random.Range(45f, 60f);
-                car.finished = true;
-            }
         }
 
-        var ordered = cars
-            .OrderBy(c => c.finishTime)
+        // ================= CALCULAR POSICION REAL (como RacePositionManager) =================
+
+        var orderedByRace = cars
+            .OrderByDescending(c => c.currentCheckpoint)
+            .ThenBy(c => c.distanceToNextCheckpoint)
             .ToList();
 
-        // ================= DETECTAR POSICIÓN DEL JUGADOR =================
+        CarProgress playerCar = orderedByRace
+            .First(c => c.GetComponent<PrometeoCarController>()?.isAI == false);
 
-        int playerPosition = -1;
+        int playerPosition = orderedByRace.IndexOf(playerCar) + 1;
 
-        for (int i = 0; i < ordered.Count; i++)
-        {
-            PrometeoCarController controller = ordered[i].GetComponent<PrometeoCarController>();
-
-            if (controller != null && !controller.isAI)
-            {
-                playerPosition = i + 1;
-                break;
-            }
-        }
-
-        // ================= MENSAJE PRINCIPAL =================
+        // ================= MENSAJE =================
 
         if (playerPosition == 1)
         {
@@ -107,41 +92,46 @@ public class RaceFinishManager : MonoBehaviour
             resultTitle.text = "🥈 ¡Excelente segundo lugar!";
             resultTitle.color = Color.white;
         }
-        else if (playerPosition == 3)
-        {
-            resultTitle.text = "🥉 Tercer lugar – ¡Buen trabajo!";
-            resultTitle.color = new Color(0.8f, 0.5f, 0.2f);
-        }
         else
         {
             resultTitle.text = "💪 ¡Sigue intentando!";
             resultTitle.color = Color.white;
         }
 
-        // ================= PODIO =================
+        // ================= CREAR PODIO BETA PRO PLAYER =================
 
-        if (ordered.Count > 0)
+        List<CarProgress> aiCars = orderedByRace
+            .Where(c => c != playerCar)
+            .ToList();
+
+        Shuffle(aiCars);
+
+        CarProgress first = null;
+        CarProgress second = null;
+        CarProgress third = null;
+
+        if (playerPosition == 1)
         {
-            firstName.text = ordered[0].facultad.ToString();
-            firstTime.text = ordered[0].finishTime.ToString("F2") + "s";
-            firstIcon.sprite = GetFacultySprite(ordered[0].facultad);
+            first = playerCar;
+            second = aiCars[0];
+            third = aiCars[1];
+        }
+        else if (playerPosition == 2)
+        {
+            first = aiCars[0];
+            second = playerCar;
+            third = aiCars[1];
+        }
+        else
+        {
+            first = aiCars[0];
+            second = aiCars[1];
+            third = playerCar;
         }
 
-        if (ordered.Count > 1)
-        {
-            secondName.text = ordered[1].facultad.ToString();
-            secondTime.text = ordered[1].finishTime.ToString("F2") + "s";
-            secondIcon.sprite = GetFacultySprite(ordered[1].facultad);
-        }
+        SetupPodium(first, second, third);
 
-        if (ordered.Count > 2)
-        {
-            thirdName.text = ordered[2].facultad.ToString();
-            thirdTime.text = ordered[2].finishTime.ToString("F2") + "s";
-            thirdIcon.sprite = GetFacultySprite(ordered[2].facultad);
-        }
-
-        // ================= OCULTAR UI GAMEPLAY =================
+        // ================= OCULTAR UI =================
 
         if (miniMapUI) miniMapUI.SetActive(false);
         if (speedText) speedText.SetActive(false);
@@ -150,9 +140,22 @@ public class RaceFinishManager : MonoBehaviour
         if (config) config.SetActive(false);
         if (positionText) positionText.SetActive(false);
 
-        // ================= MOSTRAR PANEL =================
-
         resultsPanel.SetActive(true);
+    }
+
+    void SetupPodium(CarProgress first, CarProgress second, CarProgress third)
+    {
+        firstName.text = first.facultad.ToString();
+        firstTime.text = Random.Range(14f, 20f).ToString("F2") + "s";
+        firstIcon.sprite = GetFacultySprite(first.facultad);
+
+        secondName.text = second.facultad.ToString();
+        secondTime.text = Random.Range(20f, 30f).ToString("F2") + "s";
+        secondIcon.sprite = GetFacultySprite(second.facultad);
+
+        thirdName.text = third.facultad.ToString();
+        thirdTime.text = Random.Range(30f, 40f).ToString("F2") + "s";
+        thirdIcon.sprite = GetFacultySprite(third.facultad);
     }
 
     Sprite GetFacultySprite(CarProgress.Facultad fac)
@@ -166,5 +169,16 @@ public class RaceFinishManager : MonoBehaviour
         }
 
         return null;
+    }
+
+    void Shuffle(List<CarProgress> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            CarProgress temp = list[i];
+            int randomIndex = Random.Range(i, list.Count);
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
+        }
     }
 }

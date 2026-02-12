@@ -145,18 +145,35 @@ public class RaceFinishManager : MonoBehaviour
 
     void SetupPodium(CarProgress first, CarProgress second, CarProgress third)
     {
+        // Si alguna IA no terminó, le damos tiempo basado en el jugador
+        CarProgress player = FindObjectsOfType<CarProgress>()
+            .First(c => c.GetComponent<PrometeoCarController>()?.isAI == false);
+
+        float playerTime = player.finishTime;
+
+        if (!first.finished)
+            first.finishTime = playerTime + Random.Range(-2f, 2f);
+
+        if (!second.finished)
+            second.finishTime = playerTime + Random.Range(2f, 6f);
+
+        if (!third.finished)
+            third.finishTime = playerTime + Random.Range(6f, 10f);
+
+        // Mostrar tiempos reales
         firstName.text = first.facultad.ToString();
-        firstTime.text = Random.Range(14f, 20f).ToString("F2") + "s";
+        firstTime.text = first.finishTime.ToString("F2") + "s";
         firstIcon.sprite = GetFacultySprite(first.facultad);
 
         secondName.text = second.facultad.ToString();
-        secondTime.text = Random.Range(20f, 30f).ToString("F2") + "s";
+        secondTime.text = second.finishTime.ToString("F2") + "s";
         secondIcon.sprite = GetFacultySprite(second.facultad);
 
         thirdName.text = third.facultad.ToString();
-        thirdTime.text = Random.Range(30f, 40f).ToString("F2") + "s";
+        thirdTime.text = third.finishTime.ToString("F2") + "s";
         thirdIcon.sprite = GetFacultySprite(third.facultad);
     }
+
 
     Sprite GetFacultySprite(CarProgress.Facultad fac)
     {

@@ -31,11 +31,17 @@ public class CarProgress : MonoBehaviour
 
     void Update()
     {
+        if (!RaceStartManager.raceStarted) return;
+
+        if (raceStartTime == 0f)
+            raceStartTime = Time.time;
+
         if (checkpoints.Length == 0 || finished) return;
 
         Transform next = checkpoints[Mathf.Clamp(currentCheckpoint, 0, checkpoints.Length - 1)];
         distanceToNextCheckpoint = Vector3.Distance(transform.position, next.position);
     }
+
 
     public void ReachedCheckpoint(int checkpointIndex)
     {
@@ -46,7 +52,7 @@ public class CarProgress : MonoBehaviour
         // 🎯 SI ES EL ÚLTIMO CHECKPOINT (38) → TERMINAR
         if (checkpointIndex == 38)
 
-        
+
         {
             Debug.Log("Checkpoint 38 detectado!");
             finished = true;

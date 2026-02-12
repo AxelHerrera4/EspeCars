@@ -7,6 +7,9 @@ public class RaceFinishManager : MonoBehaviour
     [Header("UI")]
     public GameObject resultsPanel;
 
+    [Header("Result Title")]
+    public Text resultTitle;
+
     [Header("Gameplay UI To Hide")]
     public GameObject miniMapUI;
     public GameObject speedText;
@@ -44,7 +47,6 @@ public class RaceFinishManager : MonoBehaviour
 
         foreach (var car in cars)
         {
-            // Si cualquier carro terminó y NO es IA → mostrar resultados
             PrometeoCarController controller = car.GetComponent<PrometeoCarController>();
 
             if (controller != null && !controller.isAI && car.finished)
@@ -66,7 +68,7 @@ public class RaceFinishManager : MonoBehaviour
             if (controller != null)
                 controller.canMove = false;
 
-            // Si alguna IA no terminó, le simulamos tiempo
+            // Simular tiempo a los que no terminaron
             if (!car.finished)
             {
                 car.finishTime = Random.Range(45f, 60f);
@@ -77,6 +79,44 @@ public class RaceFinishManager : MonoBehaviour
         var ordered = cars
             .OrderBy(c => c.finishTime)
             .ToList();
+
+        // ================= DETECTAR POSICIÓN DEL JUGADOR =================
+
+        int playerPosition = -1;
+
+        for (int i = 0; i < ordered.Count; i++)
+        {
+            PrometeoCarController controller = ordered[i].GetComponent<PrometeoCarController>();
+
+            if (controller != null && !controller.isAI)
+            {
+                playerPosition = i + 1;
+                break;
+            }
+        }
+
+        // ================= MENSAJE PRINCIPAL =================
+
+        if (playerPosition == 1)
+        {
+            resultTitle.text = "🏆 ¡GANASTE LA CARRERA!";
+            resultTitle.color = Color.yellow;
+        }
+        else if (playerPosition == 2)
+        {
+            resultTitle.text = "🥈 ¡Excelente segundo lugar!";
+            resultTitle.color = Color.white;
+        }
+        else if (playerPosition == 3)
+        {
+            resultTitle.text = "🥉 Tercer lugar – ¡Buen trabajo!";
+            resultTitle.color = new Color(0.8f, 0.5f, 0.2f);
+        }
+        else
+        {
+            resultTitle.text = "💪 ¡Sigue intentando!";
+            resultTitle.color = Color.white;
+        }
 
         // ================= PODIO =================
 

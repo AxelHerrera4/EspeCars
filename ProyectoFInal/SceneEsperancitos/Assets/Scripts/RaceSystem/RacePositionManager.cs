@@ -11,13 +11,11 @@ public class RacePositionManager : MonoBehaviour
 
     void Update()
     {
-        // Buscar carros si aún no los encontró
         if (cars == null || cars.Length == 0)
         {
             cars = FindObjectsOfType<CarProgress>();
         }
 
-        // Buscar jugador si aún no lo encontró
         if (playerCar == null && cars != null)
         {
             foreach (var car in cars)
@@ -34,8 +32,7 @@ public class RacePositionManager : MonoBehaviour
         if (cars == null || playerCar == null) return;
 
         var ordered = cars
-            .OrderByDescending(c => c.currentLap)
-            .ThenByDescending(c => c.currentCheckpoint)
+            .OrderByDescending(c => c.currentCheckpoint)
             .ThenBy(c => c.distanceToNextCheckpoint)
             .ToList();
 

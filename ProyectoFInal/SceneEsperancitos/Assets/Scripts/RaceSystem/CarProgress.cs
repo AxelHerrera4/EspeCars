@@ -2,43 +2,57 @@ using UnityEngine;
 
 public class CarProgress : MonoBehaviour
 {
-    public int currentCheckpoint = 0;
-    public int currentLap = 0;
+    // ================= FACULTAD =================
+    public enum Facultad
+    {
+        IASA,
+        MECATRONICA,
+        CIVIL,
+        SOFTWARE
+    }
 
+    public Facultad facultad;
+
+    // ================= CHECKPOINTS =================
+    public int currentCheckpoint = 0;
     public Transform[] checkpoints;
-    public int totalLaps = 1;
 
     public float distanceToNextCheckpoint;
 
+    public bool finished = false;
+    public float finishTime = 0f;
+
+    private float raceStartTime;
+
+    void Start()
+    {
+        raceStartTime = Time.time;
+    }
+
     void Update()
     {
-        if (checkpoints.Length == 0) return;
+        if (checkpoints.Length == 0 || finished) return;
 
-        // Seguridad extra
-        if (currentCheckpoint >= checkpoints.Length)
-            currentCheckpoint = 0;
-
-        Transform next = checkpoints[currentCheckpoint];
+        Transform next = checkpoints[Mathf.Clamp(currentCheckpoint, 0, checkpoints.Length - 1)];
         distanceToNextCheckpoint = Vector3.Distance(transform.position, next.position);
     }
 
     public void ReachedCheckpoint(int checkpointIndex)
     {
-        // Solo avanzar si pasa el checkpoint correcto
-        if (checkpointIndex == currentCheckpoint)
+        if (finished) return;
+
+        currentCheckpoint = checkpointIndex;
+
+        // 🎯 SI ES EL ÚLTIMO CHECKPOINT (38) → TERMINAR
+        if (checkpointIndex == 38)
+
+        
         {
-            currentCheckpoint++;
+            Debug.Log("Checkpoint 38 detectado!");
+            finished = true;
+            finishTime = Time.time - raceStartTime;
 
-            if (currentCheckpoint >= checkpoints.Length)
-            {
-                currentCheckpoint = 0;
-                currentLap++;
-
-                if (currentLap > totalLaps)
-                {
-                    currentLap = totalLaps;
-                }
-            }
+            Debug.Log(gameObject.name + " TERMINÓ EN: " + finishTime);
         }
     }
 }

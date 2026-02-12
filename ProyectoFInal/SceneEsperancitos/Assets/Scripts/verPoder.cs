@@ -5,17 +5,13 @@ public class verPoder: MonoBehaviour
     public GameObject informacion;
     private bool juegoPausado = false;
 
-    // Muestra / oculta la info y pausa el juego
+    // Muestra / oculta solo la info
     public void ToggleInformacion()
     {
         if (informacion != null)
         {
             bool activo = !informacion.activeSelf;
             informacion.SetActive(activo);
-            
-            // Pausar cuando se muestra, reanudar cuando se oculta
-            Time.timeScale = activo ? 0f : 1f;
-            juegoPausado = activo;
         }
     }
 
